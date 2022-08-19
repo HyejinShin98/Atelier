@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whm.atelier.mapper.customer.CustomerIncomeMapper">
+
+
+	<select id="selectTodayMonth" resultType="String">
+		select TO_CHAR(SYSDATE,'MM')FROM DUAL
+	</select>
+
+	<select id="selectTodayYear" resultType="String">
+		select TO_CHAR(SYSDATE,'YYYY')FROM DUAL
+	</select>
+	<select id="selectProduct" resultType="com.whm.atelier.vo.Product">
+		SELECT * 
+		FROM Product
+		WHERE store_no =#{storeNo}
+	</select>
+	
+	
+	<select id="selectOrder" resultType="com.whm.atelier.vo.OrderTb">
+		SELECT * 
+		FROM ORDER_TB
+		WHERE product_no =#{productNo}
+	</select>
+	
+	
+	<select id="selectSumOrder" resultType="int">
+		SELECT NVL(SUM(ORDER_PRODUCT_COUNT), 0) 
+		FROM ORDER_TB
+		WHERE product_no =#{productNo}
+	</select>
+	
+	
+	<select id="selectCountWish" resultType="int">
+		SELECT NVL(COUNT(*), 0) 
+		FROM ORDER_TB
+		WHERE product_no =#{productNo}
+	</select>
+	
+		<!-- 이번달의 전체 데이트 -->
+	<select id="selectMonthOrderToday" resultType="com.whm.atelier.vo.OrderTb">
+	
+	 SELECT * FROM ORDER_tb WHERE order_date BETWEEN  TRUNC(SYSDATE,'MM') and last_day(SYSDATE) AND product_no=#{productNo}
+	
+	</select>
+	
+	<!-- 저번달의 전체 데이트 -->
+	<select id="selectMonthOrder" resultType="com.whm.atelier.vo.OrderTb">
+	
+	 SELECT * FROM ORDER_tb WHERE order_date BETWEEN ADD_MONTHS( TRUNC(SYSDATE,'MM'), -1 ) and last_day(SYSDATE-1) AND product_no=#{productNo}
+	
+	</select>
+	
+	
+	
+	
+		<!-- 이번달의 전체 데이트카운트-->
+	<select id="selectMonthOrderTodaySum" resultType="int">
+	
+	 SELECT NVL(SUM(ORDER_PRODUCT_COUNT), 0)   FROM ORDER_tb WHERE order_date BETWEEN  TRUNC(SYSDATE,'MM') and last_day(SYSDATE) AND product_no=#{productNo}
+	
+	</select>
+	
+	<!-- 저번달의 전체 데이트카운트-->
+	<select id="selectMonthOrderSum" resultType="int">
+	
+	 SELECT NVL(SUM(ORDER_PRODUCT_COUNT), 0)   FROM ORDER_tb WHERE order_date BETWEEN ADD_MONTHS( TRUNC(SYSDATE,'MM'), -1 ) and last_day(SYSDATE-1) AND product_no=#{productNo}
+	
+	</select>
+	
+	<select id="selectMap" resultType="map">
+	
+	SELECT * 
+	FROM PRODUCT p, ORDER_TB ot, STORE s 
+	 WHERE p.PRODUCT_NO = ot.PRODUCT_NO  AND p.STORE_NO = s.STORE_NO  AND ot.ORDER_COMPLETE_STATUS ='PURCH' AND  s.STORE_NO=#{storeNo}
+	
+	</select>
+	
+	
+</mapper>

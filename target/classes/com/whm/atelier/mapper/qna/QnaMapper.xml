@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whm.atelier.mapper.qna.QnaMapper">
+
+	<insert id="inserteConsumerQna">
+		INSERT INTO Consumer_center VALUES(
+		consumer_center_seq.nextval,
+		#{consumer_no},
+		null,
+		#{con_center_title},
+		#{con_center_content},
+		null,
+		SYSDATE,
+		null,
+		'n'
+		)
+	</insert>
+	
+	<select id="selectMyAskList" resultType="com.whm.atelier.vo.ConsumerCenter">
+		SELECT * FROM Consumer_center 
+		WHERE consumer_no= #{consumerNo}
+		ORDER BY con_center_no DESC
+	</select>
+	
+	<select id="selectAskDetail" resultType="com.whm.atelier.vo.ConsumerCenter">
+		SELECT * FROM Consumer_center 
+		WHERE con_center_no = #{conCenterNo}
+	</select>
+	
+	<delete id="deleteMyAsk">
+		DELETE FROM Consumer_center
+		WHERE con_center_no = #{conCenterNo}
+	</delete>
+	
+	<insert id="inserteCustomerQna">
+		INSERT INTO Customer_center VALUES(
+		customer_center_seq.nextval,
+		#{customer_no},
+		null,
+		#{cus_center_title},
+		#{cus_center_content},
+		null,
+		SYSDATE,
+		null,
+		'n'
+		)
+	</insert>	
+	
+	<select id="selectCusAskList" resultType="com.whm.atelier.vo.CustomerCenter">
+		SELECT * FROM Customer_center 
+		WHERE customer_no = #{customerNo}
+		ORDER BY cus_center_no DESC
+	</select>	
+	
+	<select id="selectCusAskDetail" resultType="com.whm.atelier.vo.CustomerCenter"> 
+		SELECT * FROM Customer_center
+		WHERE cus_center_no = #{cusCenterNo}
+	</select>
+	
+	<delete id="deleteCusAsk">
+		DELETE FROM Customer_center
+		WHERE cus_center_no = #{cusCenterNo}	
+	</delete>
+	
+	<select id="selectConAskList" resultType="com.whm.atelier.vo.ConsumerCenter">
+		SELECT * FROM Consumer_Center
+		ORDER BY con_center_no DESC
+	</select>
+	
+	<select id="selectConAskDetail" resultType="com.whm.atelier.vo.ConsumerCenter">
+		SELECT * FROM Consumer_Center
+		WHERE con_center_no = #{conCenterNo}
+	</select>
+	
+	<update id="updateConAsk">
+		UPDATE Consumer_Center SET 
+		admin_no = #{admin_no},
+		con_center_comment_by_admin = #{con_center_comment_by_admin},
+		con_center_writedate_by_admin = SYSDATE,
+		con_center_category_yn = 'y'
+		WHERE con_center_no = #{con_center_no}
+	</update>
+	
+	<select id="selectAdCusAskList" resultType="com.whm.atelier.vo.CustomerCenter">
+		SELECT * FROM Customer_Center
+		ORDER BY cus_center_no DESC	
+	</select>
+	
+	<select id="selectAdCusAskDetail" resultType="com.whm.atelier.vo.CustomerCenter">
+		SELECT * FROM Customer_center
+		WHERE cus_center_no = #{cusCenterNo}
+	</select>
+	
+	<update id="updateCusAsk">
+		UPDATE Customer_Center SET
+		admin_no = #{admin_no},
+		cus_center_comment_by_admin = #{cus_center_comment_by_admin},
+		cus_center_writedate_by_admin = SYSDATE,
+		cus_center_category_yn = 'y'
+		WHERE cus_center_no = #{cus_center_no}
+	</update>
+	
+</mapper>

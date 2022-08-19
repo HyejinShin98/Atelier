@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whm.atelier.mapper.rent.RentMapper">
+
+	<insert id="insertRentAtelier">
+		INSERT INTO Rent_atelier VALUES(
+		rent_atelier_seq.nextval,
+		#{customer_no},
+		#{rent_atelier_title},
+		#{rent_atelier_content},
+		#{rent_atelier_location},
+		#{rent_atelier_max_no},
+		#{rent_atelier_price},
+		#{rent_atelier_plan},
+		SYSDATE
+		)
+	</insert>
+
+	<select id="selectRentAtelierList" resultType="com.whm.atelier.vo.RentAtelier">
+		SELECT * FROM Rent_atelier 
+		ORDER BY rent_atelier_no DESC
+	</select>
+
+	<select id="selectRentNo" resultType="com.whm.atelier.vo.RentAtelier">
+		SELECT * FROM Rent_atelier
+		WHERE rent_atelier_no = #{rentAtelierNo}
+	</select>
+
+	<delete id="deleteRentNo">
+		DELETE FROM Rent_atelier
+		WHERE Rent_atelier_no = #{rentAtelierNo}
+	</delete>
+
+	<insert id="insertGroupApp">
+		INSERT INTO Rent_group_application VALUES(
+		Rent_group_application_seq.nextval,
+		#{customer_no},
+		#{rent_atelier_no},
+		#{rent_group_app_comment},
+		'n'
+		)
+	</insert>
+	
+	<select id="selectAppComment" resultType="com.whm.atelier.vo.RentAtelierGroupApplication">
+		SELECT * FROM Rent_group_application
+		WHERE Rent_atelier_no = #{rentAtelierNo}
+	</select>
+	
+	<select id="selectByAppCom" resultType="com.whm.atelier.vo.RentAtelierGroupApplication">
+		SELECT * FROM Rent_group_application
+		WHERE rent_group_app_no = #{rentGroupAppNo}
+	</select>
+	
+	<update id="confirmGroup">
+		UPDATE Rent_group_application
+		SET rent_group_app_complete_yn = 'y'
+		WHERE customer_no = #{customer_no}
+		AND rent_atelier_no = #{rent_atelier_no}
+	</update>		
+	
+	<select id="countNop" resultType="int">
+		SELECT COUNT(DISTINCT customer_no)+1
+		FROM RENT_GROUP_APPLICATION
+		WHERE RENT_ATELIER_NO = #{rentAtelierNo}
+		AND rent_group_app_complete_yn= 'y'
+	</select>
+	
+	<select id="countApp" resultType="int">
+		SELECT COUNT(RENT_GROUP_APP_NO) 
+		FROM RENT_GROUP_APPLICATION
+		WHERE RENT_ATELIER_NO = #{rentAtelierNo}
+	</select>	
+	
+	<select id="applicatedCustomer" resultType ="com.whm.atelier.vo.RentAtelierGroupApplication">
+		SELECT DISTINCT CUSTOMER_NO FROM RENT_GROUP_APPLICATION
+		WHERE RENT_ATELIER_NO = #{rentAtelierNo}
+		AND rent_group_app_complete_yn='y'
+	</select>
+	
+	<insert id="insertGrade">
+		INSERT INTO rent_group_grade VALUES(
+		rent_group_grade_seq.nextval,
+		#{customer_no},
+		#{rent_atelier_no},
+		#{evaluated_customer_no},
+		#{manner_grade},
+		#{manner_comment}
+		)
+	</insert>
+	
+	<select id="rentListByMe" resultType="com.whm.atelier.vo.RentAtelierGroupApplication">
+		SELECT * FROM rent_group_application
+		WHERE rent_atelier_no = #{rentAtelierNo}
+		AND rent_group_app_complete_yn = 'y'
+	</select>
+	
+	<select id="selectByAtlierNo" resultType="com.whm.atelier.vo.RentAtelier"> 
+		SELECT * FROM rent_atlier
+		WHERE RENT_ATELIER_NO = #{rentAtlierNo}
+	</select>
+	
+	<select id="selectGroupGrade" resultType="com.whm.atelier.vo.RentGroupGrade">
+		SELECT * FROM rent_group_grade
+		WHERE CUSTOMER_NO  = #{customerNo}
+		AND RENT_ATELIER_NO = #{rentAtelierNo}
+		AND EVALUATED_CUSTOMER_NO = #{eCNo}
+	</select>
+	
+	<select id="mannerCheck" resultType="Integer">
+		SELECT ROUND(AVG(MANNER_GRADE),1) FROM rent_group_grade
+		WHERE customer_no = #{customerNo}
+	</select>
+	
+	
+	
+	
+	
+	<select id="meetingApplicationList" resultType="map">
+	SELECT
+	ra.RENT_ATELIER_NO,
+	rga.CUSTOMER_NO AS commentwriter,
+	ra.CUSTOMER_NO  AS writer,
+	RENT_GROUP_APP_COMPLETE_YN
+	FROM RENT_ATELIER ra 
+	left OUTER JOIN (SELECT CUSTOMER_NO,RENT_ATELIER_NO ,RENT_GROUP_APP_COMPLETE_YN  FROM RENT_GROUP_APPLICATION rga 
+	GROUP BY CUSTOMER_NO,RENT_ATELIER_NO ,RENT_GROUP_APP_COMPLETE_YN) rga ON (ra.RENT_ATELIER_NO = rga.RENT_ATELIER_NO)
+	ORDER BY ra.RENT_ATELIER_NO DESC
+	</select>
+	
+	<select id="acceptedCustomer" resultType="com.whm.atelier.vo.RentAtelierGroupApplication">
+		SELECT * FROM RENT_GROUP_APPLICATION rga WHERE RENT_GROUP_APP_COMPLETE_YN = 'y'
+	</select>
+	
+	
+	
+	
+
+	
+</mapper>

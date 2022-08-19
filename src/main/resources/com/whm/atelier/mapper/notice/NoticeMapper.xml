@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whm.atelier.mapper.notice.NoticeMapper">
+
+<!-- 공지사항 -->
+	<select id="selectAll" resultType="com.whm.atelier.vo.Notice">
+		SELECT * FROM admin_notice ORDER BY admin_no DESC
+	</select>
+	
+	<select id="selectByNo" resultType="com.whm.atelier.vo.Notice">
+		SELECT * 
+		FROM admin_notice 
+		WHERE admin_no = #{admin_no}
+	</select>
+	
+	<insert id="insertNotice">
+		INSERT INTO admin_notice VALUES(
+			admin_notice_seq.nextval,
+			#{admin_notice_no},
+			#{admin_no},
+			#{admin_notice_title},
+			#{admin_notice_content},
+			SYSDATE
+		)		
+	</insert>
+	
+	<delete id="deleteByNo">
+		DELETE FROM admin_notice WHERE admin_no = #{admin_no}
+	</delete>
+	
+	<update id="updateNoticeTitleAndContent">
+		UPDATE admin_notice
+		SET admin_notice_title = #{admin_notice_title} , admin_notice_content = #{admin_notice_content}
+		WHERE admin_no = #{admin_no}		
+	</update>
+
+
+</mapper>

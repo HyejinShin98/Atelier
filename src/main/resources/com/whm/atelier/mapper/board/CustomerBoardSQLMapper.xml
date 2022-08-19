@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whm.atelier.mapper.board.CustomerBoardSQLMapper">
+
+	<select id="createFreeBoardPk" resultType="int">
+		SELECT FreeBoard_seq.nextval FROM Dual
+
+	</select>
+
+	<insert id="insertBoard">
+		INSERT INTO FreeBoard VALUES(
+		#{freeboard_no},
+		#{customer_no},
+		#{freeboard_title},
+		#{freeboard_content},
+		0,
+		SYSDATE
+		)
+	</insert>
+
+	<select id="selectAll" resultType="com.whm.atelier.vo.FreeBoardVo">
+		SELECT * FROM FreeBoard ORDER BY freeboard_no DESC
+	</select>
+	
+	
+	<select id="selectByNo" resultType="com.whm.atelier.vo.FreeBoardVo">
+		SELECT * FROM FreeBoard WHERE freeboard_no = #{freeboardNo}
+	</select>
+	
+
+	 <update id="increaseReadCount">
+		UPDATE FreeBoard 
+		SET freeboard_readcount = freeboard_readcount + 1 
+		WHERE freeboard_no = #{freeboardNo}
+	</update> 
+	
+	<delete id="deleteByNo">
+		DELETE FROM FreeBoard WHERE freeboard_no = #{freeboardNo}
+	</delete>
+	
+	<update id="updateTitleContent">
+		UPDATE FreeBoard 
+		SET freeboard_title = #{freeboard_title} , freeboard_content = #{freeboard_content} 
+		WHERE freeboard_no = #{freeboard_no}
+	</update>
+	
+	<insert id="insertFreeBoardImage">
+		INSERT INTO FB_IMAGE VALUES(
+		FB_IMAGE_seq.nextval,
+		#{freeboard_no},
+		#{freeboardimage_link},
+		#{freeboardimage_origin_filename}
+		) 
+	</insert>
+	
+	<select id="selectFreeBoardImage" resultType="com.whm.atelier.vo.FreeBoardImageVo">
+		SELECT * FROM FB_IMAGE WHERE freeboard_no = #{freeboardNo}
+	</select>
+	
+	<insert id="insertComment">
+		INSERT INTO FB_COMMENT VALUES(
+			FB_COMMENT_seq.nextval,
+			#{customer_no},
+			#{freeboard_no},
+			#{comment_content},
+			SYSDATE		
+		)
+	</insert>
+	
+	
+	<select id="selectCommentList" 	resultType="com.whm.atelier.vo.CommentVo">
+		SELECT * FROM FB_COMMENT ORDER BY comment_writedate ASC
+	</select>
+	
+	<select id="selectCommnetByNo" resultType="com.whm.atelier.vo.CommentVo">
+		SELECT * FROM FB_COMMNET WHERE freeboard_no = #{freeboardNo}
+	</select>
+	
+	<delete id="deleteComment">
+		DELETE FROM FB_Comment WHERE comment_no = #{commentNo}
+		
+	</delete>
+
+	<update id="updateComment">
+		UPDATE FB_Comment 
+		SET comment_content = #{comment_content}
+		WHERE comment_no = #{comment_no} 
+	</update>
+	
+	
+	
+</mapper>
+                     

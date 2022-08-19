@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whm.atelier.mapper.admin.AdminMMgtMapper">
+	
+	<select id="selectConsumer" resultType="com.whm.atelier.vo.Consumer">
+		SELECT * FROM CONSUMER
+	</select>
+
+	<select id="selectCustomer" resultType="com.whm.atelier.vo.Customer">
+		SELECT * FROM CUSTOMER
+	</select>
+
+</mapper>
